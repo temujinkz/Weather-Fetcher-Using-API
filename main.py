@@ -1,23 +1,26 @@
 import requests
-import json
+import os
+from dotenv import load_dotenv
 
-# Replace with your OpenWeatherMap API key
-API_KEY = 'your_openweathermap_api_key'
+# Load API key from .env file
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')
 BASE_URL = 'http://api.openweathermap.org/data/2.5/weather'
 
 def get_weather(city):
     try:
-        # Constructing the final API call URL
+        # Construct the full API URL with city and API key
         url = f"{BASE_URL}?q={city}&appid={API_KEY}&units=metric"
         response = requests.get(url)
         data = response.json()
 
-        # Check if the request was successful
+        # Check if the response is valid
         if data['cod'] != 200:
             print(f"City not found: {data['message']}")
             return None
 
-        # Extract relevant weather information
+        # Extract weather details
         weather_info = {
             'city': data['name'],
             'temperature': data['main']['temp'],
